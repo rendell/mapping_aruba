@@ -1,0 +1,50 @@
+data<-read.csv("cosmetics.csv", stringsAsFactors = FALSE)
+brands<-read.csv("brands_check.csv", stringsAsFactors = FALSE)
+suppliers<-read.csv("Suppliers.csv", stringsAsFactors = FALSE)
+
+
+library("ggmap")
+library(tm)
+library(SnowballC)
+library(wordcloud)
+library(RColorBrewer)
+
+data$Type <- as.character(data$Type)
+
+#colour pallete
+cbPalette <- c("#E69F00", "#000000", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+
+# Different map types
+aruba <- "aruba"
+
+qmap(aruba, zoom=12)
+qmap(aruba, zoom=12, maptype="satellite", color="bw")
+qmap(aruba, zoom=12, maptype="roadmap", color="bw")
+qmap(aruba, zoom=12, maptype="hybrid", color="bw")
+qmap(aruba, zoom=12, source="osm", color="bw")
+qmap(aruba, zoom=12, source="stamen", maptype="toner")
+qmap(aruba, zoom=12, source="stamen", maptype="watercolor", color="bw")
+qmap(aruba, zoom=12, source="stamen", maptype="terrain")
+
+
+#Actual mapping
+Arubamap <- qmap(aruba, zoom=12, source="osm", color="bw")
+
+Arubamap +
+        geom_point(aes(x=Longitude, y=Latitude, colour=Type, fill=Type, shape=Type), 
+                   data=data, size=4.5)+ geom_point(position = "jitter")+scale_colour_manual(values=cbPalette)
+
+#Wordcloud
+wordcloud(brands$Brands, brands$Frequency, min.freq=1, random.color=TRUE)
+wordcloud(brands$Brands, brands$Frequency, min.freq=1, random.color=TRUE, colors=brewer.pal(8,"Accent"))
+wordcloud(brands$Brands, brands$Frequency, min.freq=1, colors=brewer.pal(8,"Accent"))
+wordcloud(brands$Brands, brands$Frequency, min.freq=1, colors=brewer.pal(12,"Paired"))
+wordcloud(brands$Brands, brands$Frequency, min.freq=1, colors=brewer.pal(8,"Dark2"))
+wordcloud(brands$Brands, brands$Frequency, min.freq=1, colors=brewer.pal(9,"Pastel1"))
+wordcloud(brands$Brands, brands$Frequency, min.freq=1, colors=brewer.pal(8,"Pastel2"))
+wordcloud(brands$Brands, brands$Frequency, min.freq=1, colors=brewer.pal(9,"Set1"))
+wordcloud(brands$Brands, brands$Frequency, min.freq=1, colors=brewer.pal(8,"Set2"))
+wordcloud(brands$Brands, brands$Frequency, min.freq=1, colors=brewer.pal(12,"Set3"))
+
+wordcloud(suppliers$Suppliers, suppliers$Frequency, min.freq=1, random.color=TRUE)
